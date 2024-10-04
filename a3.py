@@ -6,7 +6,7 @@ def main():
     fastest_manufacturer_plots('cars.csv')
     name_count_plots('cars.csv')
     PS_KG_ratio_plots('cars.csv')
-    Gebhardt_Times('cars.csv')
+    gebhardt_times('cars.csv')
 
 def lap_time_plots(file_path):
     try:
@@ -173,7 +173,7 @@ def PS_KG_ratio_plots(file_path):
     plt.title('PS KG values')
     plt.show()
 
-def Gebhardt_Times(file_path):
+def gebhardt_times(file_path):
     try:
         # Read the data from CSV
         ranking_data = pd.read_csv(file_path)
