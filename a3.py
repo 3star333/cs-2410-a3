@@ -1,12 +1,11 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import csv
 
 def main():
-    #lap_time_plots('cars.csv')
-    #fastest_manufacturer_plots('cars.csv')
-    #name_count_plots('cars.csv')
-    #PS_KG_ratio_plots('cars.csv')
+    lap_time_plots('cars.csv')
+    fastest_manufacturer_plots('cars.csv')
+    name_count_plots('cars.csv')
+    PS_KG_ratio_plots('cars.csv')
     Gebhardt_Times('cars.csv')
 
 def lap_time_plots(file_path):
