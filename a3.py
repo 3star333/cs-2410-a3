@@ -1,11 +1,13 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+import csv
 
 def main():
-    lap_time_plots('cars.csv')
-    fastest_manufacturer_plots('cars.csv')
-    name_count_plots('cars.csv')
-    PS_KG_ratio_plots('cars.csv')
+    #lap_time_plots('cars.csv')
+    #fastest_manufacturer_plots('cars.csv')
+    #name_count_plots('cars.csv')
+    #PS_KG_ratio_plots('cars.csv')
+    Gebhardt_Times('cars.csv')
 
 def lap_time_plots(file_path):
     try:
@@ -172,5 +174,49 @@ def PS_KG_ratio_plots(file_path):
     plt.title('PS KG values')
     plt.show()
 
+def Gebhardt_Times(file_path):
+    try:
+        # Read the data from CSV
+        ranking_data = pd.read_csv(file_path)
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+        return
+    except pd.errors.EmptyDataError:
+        print("Error: The file is empty.")
+        return
+    except pd.errors.ParserError:
+        print("Error: There was a parsing error.")
+        return
+    
+    # Ensure the CSV file contains the necessary columns
+    required_columns = ['Rank', 'Vehicle', 'Driver', 'Time', 'PS / KG']
+    if not set(required_columns).issubset(ranking_data.columns):
+        raise ValueError(f"CSV file must contain the following columns: {', '.join(required_columns)}")
+    
+    # Filter the DataFrame for rows where the 'Driver' is 'Christian Gebhardt'
+    gebhardt_data = ranking_data[ranking_data['Driver'] == 'Christian Gebhardt']
+    
+    # Check if any data was found for Christian Gebhardt
+    if gebhardt_data.empty:
+        print("No data found for Christian Gebhardt.")
+        return
+    
+    # Create a dictionary with 'Vehicle' as the key and 'Time' as the value
+    car_times = dict(zip(gebhardt_data['Vehicle'], gebhardt_data['Time']))
+
+    cars = gebhardt_data['Vehicle']
+    lap_times = gebhardt_data['Time']
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(cars, lap_times, marker='o')
+    plt.title('Christian Gebhardt Best Times')
+    plt.xlabel('Vehicle')
+    plt.ylabel('Time')
+    plt.xticks(rotation=45, ha='right')
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.tight_layout()
+    plt.show()
+
+    
 # Run the main function
 main()
