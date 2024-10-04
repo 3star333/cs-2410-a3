@@ -4,6 +4,8 @@ import pandas as pd
 def main():
     lap_time_plots('cars.csv')
     fastest_manufacturer_plots('cars.csv')
+    name_count_plots('cars.csv')
+    PS_KG_ratio_plots('cars.csv')
 
 def lap_time_plots(file_path):
     try:
@@ -92,6 +94,82 @@ def fastest_manufacturer_plots(file_path):
     plt.tight_layout()
     
     # Display the plot
+    plt.show()
+
+def name_count_plots(file_path):
+    try:
+        # Read the data from CSV
+        ranking_data = pd.read_csv(file_path)
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+        return
+    except pd.errors.EmptyDataError:
+        print("Error: The file is empty.")
+        return
+    except pd.errors.ParserError:
+        print("Error: There was a parsing error.")
+        return
+    
+    # Ensure the CSV file contains 'Rank', 'Vehicle', 'Driver', and 'Time' columns
+    if not set(['Rank', 'Vehicle', 'Driver', 'Time']).issubset(ranking_data.columns):
+        raise ValueError("CSV file must contain 'Rank', 'Vehicle', 'Driver', and 'Time' columns.")
+    
+    # Makes a dictionary with the names of the drivers and respective count
+    ranks = ranking_data['Driver']
+    name_count = {}
+    for name in ranks:
+        if name in name_count:
+            name_count[name] += 1
+        else:
+            name_count[name] = 1
+    names = list(name_count.keys())
+    counts = list(name_count.values())
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(names, counts, color='skyblue')
+
+    plt.xlabel('Drivers')
+    plt.ylabel('Count')
+    plt.title('Driver Name Frequency')
+    plt.xticks(rotation=65) 
+
+    plt.tight_layout()
+    plt.show()
+
+def PS_KG_ratio_plots(file_path):
+    try:
+        # Read the data from CSV
+        ranking_data = pd.read_csv(file_path)
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' was not found.")
+        return
+    except pd.errors.EmptyDataError:
+        print("Error: The file is empty.")
+        return
+    except pd.errors.ParserError:
+        print("Error: There was a parsing error.")
+        return
+    
+    # Ensure the CSV file contains 'Rank', 'Vehicle', 'Driver', and 'Time' columns
+    if not set(['Rank', 'Vehicle', 'Driver', 'Time', 'PS / KG']).issubset(ranking_data.columns):
+        raise ValueError("CSV file must contain 'Rank', 'Vehicle', 'Driver', 'Time', and 'PS / KG' columns.")
+    
+    
+    pskgValues = ranking_data['PS / KG']
+    PS = []
+    KG = []
+
+    for value in pskgValues:
+        PSnum, KGnum = value.split(' / ')
+        if (PSnum.isdigit() and KGnum.isdigit()):
+             PS.append(int(PSnum))
+             KG.append(int(KGnum))
+
+	
+    plt.scatter(PS, KG, color='black', s=15)  # s is the size of the dots
+    plt.xlabel('PS')
+    plt.ylabel('KG')
+    plt.title('PS KG values')
     plt.show()
 
 # Run the main function
